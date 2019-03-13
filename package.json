@@ -1,0 +1,30 @@
+{
+  "name": "HealthAppCloud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "node node_modules/rimraf/bin functions",
+    "build": "babel app --out-dir functions --copy-files --ignore app/node_modules",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postbuild": "cd functions && npm i -s",
+    "deploy": "npm run build && firebase deploy --only functions",
+    "deploy:all": "firebase deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alassadi/HealthAppCloud.git"
+  },
+  "keywords": [],
+  "author": "@alassadi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alassadi/HealthAppCloud/issues"
+  },
+  "homepage": "https://github.com/alassadi/HealthAppCloud#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "rimraf": "^2.6.3"
+  }
+}
