@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 const checkUserData = data =>
   data.hasOwnProperty('name') &&
-  data.hasOwnProperty('email') &&
+  data.hasOwnProperty('email' ) &&
   data.hasOwnProperty('password') &&
   data.hasOwnProperty('date_of_birth') &&
   data.hasOwnProperty('gender');

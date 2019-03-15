@@ -10,6 +10,6 @@ const funs = {
   helloWorld: functions.https.onRequest((req, res) => {
     res.send('Hello from a Serverless Database!');
   }),
-  register
+  ...register
 };
 module.exports = funs;
