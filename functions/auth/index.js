@@ -1,3 +1,5 @@
+'use strict';
+
 const admin = require('firebase-admin');
 
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
@@ -6,12 +8,8 @@ const admin = require('firebase-admin');
 // when decoded successfully, the ID Token content will be added as `req.user`.
 module.exports = (req, res, next) => {
 
-  if ((!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) &&
-      !(req.cookies && req.cookies.__session)) {
-    console.error('No Firebase ID token was passed as a Bearer token in the Authorization header.',
-      'Make sure you authorize your request by providing the following HTTP header:',
-      'Authorization: Bearer <Firebase ID Token>',
-      'or by passing a "__session" cookie.');
+  if ((!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) && !(req.cookies && req.cookies.__session)) {
+    console.error('No Firebase ID token was passed as a Bearer token in the Authorization header.', 'Make sure you authorize your request by providing the following HTTP header:', 'Authorization: Bearer <Firebase ID Token>', 'or by passing a "__session" cookie.');
     res.status(403).send('Unauthorized');
     return;
   }
@@ -20,7 +18,7 @@ module.exports = (req, res, next) => {
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
     // Read the ID Token from the Authorization header.
     idToken = req.headers.authorization.split('Bearer ')[1];
-  } else if(req.cookies) {
+  } else if (req.cookies) {
     // Read the ID Token from cookie.
     idToken = req.cookies.__session;
   } else {
@@ -28,10 +26,10 @@ module.exports = (req, res, next) => {
     res.status(403).send('Unauthorized');
     return;
   }
-  admin.auth().verifyIdToken(idToken).then((decodedIdToken) => {
+  admin.auth().verifyIdToken(idToken).then(decodedIdToken => {
     req.user = decodedIdToken;
     return next();
-  }).catch((error) => {
+  }).catch(error => {
     console.error('Error while verifying Firebase ID token:', error);
     res.status(403).send('Unauthorized');
   });

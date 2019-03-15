@@ -1,5 +1,5 @@
 {
   "projects": {
-    "staging": "cloudproject-f25f2"
+    "default": "cloudproject-f25f2"
   }
 }
