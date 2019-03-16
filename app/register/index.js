@@ -5,13 +5,15 @@ const cookieParser = require('cookie-parser')();
 const express = require('express');
 const app = express();
 
-app.use(require('cors')({ origin: true }));
+app.use(require('cors')({
+  origin: true
+}));
 app.use(cookieParser);
 app.use(bodyParser.json());
 
 const checkUserData = data =>
   data.hasOwnProperty('name') &&
-  data.hasOwnProperty('email' ) &&
+  data.hasOwnProperty('email') &&
   data.hasOwnProperty('password') &&
   data.hasOwnProperty('date_of_birth') &&
   data.hasOwnProperty('gender');
@@ -27,8 +29,7 @@ app.post('/', (req, res) => {
   const data = req.body;
   if (!checkUserData(data)) {
     return res.status(400).json({
-      message:
-        'Denied. Missing parameters. Required: ' +
+      message: 'Denied. Missing parameters. Required: ' +
         'name, email, password, date_of_birth, gender'
     });
   }
@@ -42,7 +43,7 @@ app.post('/', (req, res) => {
     })
     .then(userRecord => {
       dbref
-        .collection('Users')
+        .collection('users')
         .doc(userRecord.uid.toString())
         .set({
           name: data.name,

@@ -33,7 +33,7 @@ app.post('/', (req, res) => {
     password: data.password,
     disabled: false
   }).then(userRecord => {
-    dbref.collection('Users').doc(userRecord.uid.toString()).set({
+    dbref.collection('users').doc(userRecord.uid.toString()).set({
       name: data.name,
       email: data.email,
       date_of_birth: data.date_of_birth,
