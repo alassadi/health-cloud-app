@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')();
 const express = require('express');
 const app = express();
-//const auth = require('../auth');
+const auth = require('../auth');
 const firebaseHelper = require('firebase-functions-helper');
 const db = admin.firestore();
 app.use(require('cors')({
@@ -12,7 +12,7 @@ app.use(require('cors')({
 }));
 app.use(cookieParser);
 app.use(bodyParser.json());
-//app.use(auth);
+app.use(auth);
 
 /**
  * Gets ALL the documents in the data collection
@@ -76,6 +76,50 @@ app.get('/:id/:date/:state', (req, res) => {
     .catch(err => {
       console.log('Error getting document', err);
     });
+});
+
+/** 
+ * With URL parameters:
+ * Send a GET request such as
+ * http://localhost:5000/cloudproject-f25f2/us-central1/data/role/email
+ * to get a user role by passing his/her email
+ * @type {HttpsFunction}
+ */
+
+app.get('/role/:email', (req, res) => {
+  const db = admin.firestore();
+  const dbref = db.collection('users').where('email', '==', req.params.email);
+
+  dbref
+  .get()
+  .then(snapshot => {
+      snapshot.docs.forEach(doc => {
+          if(doc.exists) {
+            return res.status(200).json({role: 'user'});
+          }
+      });
+  })
+  .catch(error => {
+      return res.status(500).json({
+          message: 'Error' + error.toString()
+      });
+  });
+  const dbref2 = db.collection('doctors').where('email', '==', req.params.email);
+  dbref2
+  .get()
+  .then(snapshot => {
+      snapshot.docs.forEach(doc => {
+          if(doc.exists) {
+            return res.status(200).json({role: 'doctor'});
+          }
+      });
+  })
+  .catch(error => {
+      return res.status(500).json({
+          message: 'Error' + error.toString()
+      });
+  });
+
 });
 
 module.exports.data = functions.region('europe-west1').https.onRequest(app);

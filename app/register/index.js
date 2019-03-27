@@ -53,9 +53,7 @@ app.post('/', (req, res) => {
         })
         .then(() => {
           return res.status(200).json({
-            message: 'User Created Successfully',
-            email: userRecord.email,
-            user_uid: userRecord.uid
+            message: 'User Created Successfully'
           });
         });
     })

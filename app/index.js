@@ -6,12 +6,14 @@ admin.initializeApp(functions.config().firebase);
 
 const register = require('./register');
 const data = require('./data');
+const admins = require('./admin');
 
 const funs = {
-  helloWorld: functions.https.onRequest((req, res) => {
+  helloWorld: functions.region('europe-west1').https.onRequest((req, res) => {
     res.send('Hello from a Serverless Database!');
   }),
   ...register,
-  ...data
+  ...data,
+  ...admins
 };
 module.exports = funs;
