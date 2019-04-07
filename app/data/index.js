@@ -70,7 +70,9 @@ app.get('/:id/:date/:state', (req, res) => {
           message: 'Document Not Found!'
         });
       } else {
-        return res.status(200).send(doc.data());
+        const json_data = doc.data();
+        const arr = Object.keys(json_data).map((key) => [key, json_data[key]]);
+        return res.status(200).send(arr);
       }
     })
     .catch(err => {
@@ -91,35 +93,56 @@ app.get('/role/:email', (req, res) => {
   const dbref = db.collection('users').where('email', '==', req.params.email);
 
   dbref
-  .get()
-  .then(snapshot => {
+    .get()
+    .then(snapshot => {
       snapshot.docs.forEach(doc => {
-          if(doc.exists) {
-            return res.status(200).json({role: 'user'});
-          }
+        if (doc.exists) {
+          return res.status(200).json({
+            role: 'user'
+          });
+        }
       });
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       return res.status(500).json({
-          message: 'Error' + error.toString()
+        message: 'Error' + error.toString()
       });
-  });
+    });
   const dbref2 = db.collection('doctors').where('email', '==', req.params.email);
   dbref2
-  .get()
-  .then(snapshot => {
+    .get()
+    .then(snapshot => {
       snapshot.docs.forEach(doc => {
-          if(doc.exists) {
-            return res.status(200).json({role: 'doctor'});
-          }
+        if (doc.exists) {
+          return res.status(200).json({
+            role: 'doctor'
+          });
+        }
       });
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       return res.status(500).json({
-          message: 'Error' + error.toString()
+        message: 'Error' + error.toString()
       });
-  });
+    });
 
+  const dbref3 = db.collection('admins').where('email', '==', req.params.email);
+  dbref3
+    .get()
+    .then(snapshot => {
+      snapshot.docs.forEach(doc => {
+        if (doc.exists) {
+          return res.status(200).json({
+            role: 'admin'
+          });
+        }
+      });
+    })
+    .catch(error => {
+      return res.status(500).json({
+        message: 'Error' + error.toString()
+      });
+    });
 });
 
 module.exports.data = functions.region('europe-west1').https.onRequest(app);
